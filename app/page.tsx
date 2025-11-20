@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-gradient-editorial bg-noise">
@@ -7,19 +9,21 @@ export default function Home() {
           <h1 className="font-display text-display-md md:text-display-lg text-foreground text-balance">
             Transform Strategy
             <br />
-            <span className="text-accent">Into Stories</span>
+            <span className="bg-gradient-to-r from-purple to-orange bg-clip-text text-transparent">
+              Into Stories
+            </span>
           </h1>
           <p className="font-body text-body-lg text-foreground-muted max-w-2xl mx-auto text-pretty">
             From 90-page company documents to strategic social media calendars.
             AI-powered content generation for consultants, agencies, and clients.
           </p>
           <div className="flex gap-4 justify-center items-center">
-            <button className="btn-primary">
+            <Link href="/auth/signup" className="btn-primary">
               Get Started
-            </button>
-            <button className="btn-secondary">
-              View Demo
-            </button>
+            </Link>
+            <Link href="/auth/login" className="btn-secondary">
+              Sign In
+            </Link>
           </div>
         </div>
 
@@ -30,24 +34,27 @@ export default function Home() {
               title: "Consultant Backend",
               description: "Upload company OS documents and generate comprehensive social strategies with AI.",
               icon: "📊",
+              accent: "purple",
             },
             {
               title: "Agency Portal",
               description: "Refine content, collaborate with clients, and manage multiple campaigns effortlessly.",
               icon: "✨",
+              accent: "orange",
             },
             {
               title: "Client Approval",
               description: "Beautiful monthly views with strategic context for easy review and approval.",
               icon: "✓",
+              accent: "purple",
             },
           ].map((feature, index) => (
             <div
               key={index}
-              className="card-editorial p-8 space-y-4 stagger-item"
+              className="card-editorial p-8 space-y-4 stagger-item group"
             >
               <div className="text-4xl">{feature.icon}</div>
-              <h3 className="font-headline text-heading-md text-foreground">
+              <h3 className={`font-headline text-heading-md text-foreground group-hover:text-${feature.accent} transition-colors`}>
                 {feature.title}
               </h3>
               <p className="font-body text-body-md text-foreground-muted">

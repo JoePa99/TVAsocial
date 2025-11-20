@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useDropzone } from 'react-dropzone';
 
 export default function NewClientPage() {
@@ -113,9 +114,12 @@ export default function NewClientPage() {
   return (
     <div className="min-h-screen bg-gradient-editorial bg-noise">
       {/* Header */}
-      <header className="border-b border-neutral-200 bg-background/80 backdrop-blur-sm">
+      <header className="border-b border-neutral-700 bg-background/80 backdrop-blur-sm">
         <div className="max-w-4xl mx-auto px-6 py-6">
-          <h1 className="font-display text-heading-xl text-foreground">
+          <Link href="/consultant" className="inline-block mb-3 text-foreground-muted hover:text-foreground transition-colors">
+            ← Back to Dashboard
+          </Link>
+          <h1 className="font-display text-heading-xl bg-gradient-to-r from-purple to-orange bg-clip-text text-transparent">
             Create New Client
           </h1>
           <p className="font-body text-body-md text-foreground-muted mt-2">
@@ -139,10 +143,10 @@ export default function NewClientPage() {
                   <div
                     className={`w-10 h-10 rounded-full flex items-center justify-center font-ui font-semibold transition-all duration-300 ${
                       isActive
-                        ? 'bg-accent text-white shadow-medium'
+                        ? 'bg-purple text-white shadow-glow'
                         : isComplete
                         ? 'bg-success text-white'
-                        : 'bg-neutral-200 text-neutral-500'
+                        : 'bg-neutral-700 text-neutral-400'
                     }`}
                   >
                     {isComplete ? '✓' : index + 1}
@@ -156,7 +160,7 @@ export default function NewClientPage() {
                   </span>
                 </div>
                 {index < 2 && (
-                  <div className={`w-12 h-0.5 ${isComplete ? 'bg-success' : 'bg-neutral-200'}`} />
+                  <div className={`w-12 h-0.5 ${isComplete ? 'bg-success' : 'bg-neutral-700'}`} />
                 )}
               </div>
             );
@@ -164,8 +168,8 @@ export default function NewClientPage() {
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-accent-light border border-accent/20 animate-slide-down">
-            <p className="font-ui text-ui-md text-accent-dark">{error}</p>
+          <div className="mb-6 p-4 bg-orange/10 border border-orange/20 animate-slide-down">
+            <p className="font-ui text-ui-md text-orange">{error}</p>
           </div>
         )}
 
@@ -244,10 +248,10 @@ export default function NewClientPage() {
               {...getRootProps()}
               className={`border-2 border-dashed p-12 text-center cursor-pointer transition-all duration-300 ${
                 isDragActive
-                  ? 'border-accent bg-accent/5'
+                  ? 'border-purple bg-purple/10 shadow-glow'
                   : file
-                  ? 'border-success bg-success/5'
-                  : 'border-neutral-300 hover:border-neutral-400'
+                  ? 'border-success bg-success/10'
+                  : 'border-neutral-700 hover:border-orange hover:shadow-orange-glow'
               }`}
             >
               <input {...getInputProps()} />
@@ -265,7 +269,7 @@ export default function NewClientPage() {
                     </p>
                   </>
                 ) : isDragActive ? (
-                  <p className="font-body text-body-lg text-accent">
+                  <p className="font-body text-body-lg text-purple">
                     Drop the file here...
                   </p>
                 ) : (
@@ -307,12 +311,12 @@ export default function NewClientPage() {
         {step === 'generating' && (
           <div className="card-editorial p-12 text-center animate-fade-in">
             <div className="space-y-6">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-accent/10 rounded-full">
-                <div className="w-10 h-10 border-4 border-accent/30 border-t-accent rounded-full animate-spin" />
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-purple/10 rounded-full">
+                <div className="w-10 h-10 border-4 border-purple/30 border-t-purple rounded-full animate-spin" />
               </div>
 
               <div className="space-y-2">
-                <h2 className="font-headline text-heading-lg text-foreground">
+                <h2 className="font-headline text-heading-lg bg-gradient-to-r from-purple to-orange bg-clip-text text-transparent">
                   Generating Strategy...
                 </h2>
                 <p className="font-body text-body-md text-foreground-muted">
@@ -323,9 +327,9 @@ export default function NewClientPage() {
 
               {/* Progress Bar */}
               <div className="max-w-md mx-auto">
-                <div className="h-2 bg-neutral-200 overflow-hidden">
+                <div className="h-2 bg-neutral-700 overflow-hidden rounded-full">
                   <div
-                    className="h-full bg-accent transition-all duration-500 ease-out"
+                    className="h-full bg-gradient-to-r from-purple to-orange transition-all duration-500 ease-out"
                     style={{ width: `${uploadProgress}%` }}
                   />
                 </div>

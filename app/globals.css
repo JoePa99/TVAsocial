@@ -1,14 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,400;1,9..144,600;1,9..144,700;1,9..144,900&family=Outfit:wght@300;400;500;600;700&family=Sora:wght@300;400;600;700;800&family=Work+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Slab:wght@300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --font-fraunces: 'Fraunces', serif;
-  --font-sora: 'Sora', sans-serif;
-  --font-work-sans: 'Work Sans', sans-serif;
-  --font-outfit: 'Outfit', sans-serif;
+  --font-playfair: 'Playfair Display', serif;
+  --font-roboto-slab: 'Roboto Slab', serif;
 }
 
 @layer base {
@@ -28,20 +26,20 @@
 
   /* Selection */
   ::selection {
-    @apply bg-accent/20 text-accent-dark;
+    @apply bg-purple/30 text-purple-light;
   }
 }
 
 @layer components {
-  /* Editorial card style - magazine-like, not generic rounded rectangles */
+  /* Dark card style with glow effects */
   .card-editorial {
-    @apply relative bg-background border border-neutral-200 shadow-editorial transition-all duration-300;
-    @apply hover:shadow-medium hover:border-neutral-300;
+    @apply relative bg-background-card border border-neutral-700 shadow-editorial transition-all duration-300;
+    @apply hover:shadow-glow hover:border-purple/50;
   }
 
-  /* Magazine-style section divider */
+  /* Dark section divider with purple/orange gradient */
   .section-divider {
-    @apply relative h-px bg-gradient-to-r from-transparent via-neutral-300 to-transparent my-12;
+    @apply relative h-px bg-gradient-to-r from-transparent via-purple/30 to-transparent my-12;
   }
 
   /* Textured background for depth */
@@ -70,13 +68,13 @@
     pointer-events: none;
   }
 
-  /* Animated gradient background */
+  /* Dark animated gradient background with purple/orange accents */
   .bg-gradient-editorial {
     background: linear-gradient(
       135deg,
-      #FAFAF9 0%,
-      #F5F5F4 50%,
-      #FAFAF9 100%
+      #0A0A0A 0%,
+      #1A1A1A 50%,
+      #0A0A0A 100%
     );
   }
 
@@ -85,20 +83,20 @@
     @apply focus:outline-none focus:ring-2 focus:ring-accent/20 focus:ring-offset-2 focus:ring-offset-background;
   }
 
-  /* Button styles - avoiding generic rounded rectangles */
+  /* Dark button styles with purple and orange accents */
   .btn-primary {
-    @apply px-6 py-3 bg-accent text-white font-ui font-medium;
-    @apply border border-accent-dark shadow-soft;
-    @apply hover:bg-accent-hover hover:shadow-medium;
+    @apply px-6 py-3 bg-purple text-white font-ui font-medium;
+    @apply border border-purple-dark shadow-soft;
+    @apply hover:bg-purple-hover hover:shadow-glow;
     @apply active:shadow-soft active:translate-y-px;
     @apply transition-all duration-200;
     @apply focus-editorial;
   }
 
   .btn-secondary {
-    @apply px-6 py-3 bg-background text-foreground font-ui font-medium;
-    @apply border border-neutral-300 shadow-soft;
-    @apply hover:border-neutral-400 hover:shadow-medium;
+    @apply px-6 py-3 bg-background-card text-foreground font-ui font-medium;
+    @apply border border-neutral-700 shadow-soft;
+    @apply hover:border-orange hover:shadow-orange-glow;
     @apply active:shadow-soft active:translate-y-px;
     @apply transition-all duration-200;
     @apply focus-editorial;
@@ -106,29 +104,29 @@
 
   .btn-ghost {
     @apply px-4 py-2 text-foreground-muted font-ui font-medium;
-    @apply hover:text-foreground hover:bg-neutral-100;
-    @apply active:bg-neutral-200;
+    @apply hover:text-foreground hover:bg-neutral-800;
+    @apply active:bg-neutral-700;
     @apply transition-all duration-150;
     @apply focus-editorial;
   }
 
-  /* Input styles */
+  /* Dark input styles */
   .input-editorial {
-    @apply w-full px-4 py-3 bg-background border border-neutral-300;
+    @apply w-full px-4 py-3 bg-background-card border border-neutral-700;
     @apply font-body text-body-md text-foreground placeholder:text-foreground-subtle;
     @apply shadow-soft;
-    @apply hover:border-neutral-400;
-    @apply focus:border-accent focus:ring-2 focus:ring-accent/10;
+    @apply hover:border-neutral-600;
+    @apply focus:border-purple focus:ring-2 focus:ring-purple/20;
     @apply transition-all duration-200;
   }
 
-  /* Loading shimmer effect */
+  /* Dark loading shimmer effect */
   .shimmer {
     background: linear-gradient(
       90deg,
-      rgba(0, 0, 0, 0.02) 0px,
-      rgba(0, 0, 0, 0.04) 40px,
-      rgba(0, 0, 0, 0.02) 80px
+      rgba(139, 92, 246, 0.05) 0px,
+      rgba(139, 92, 246, 0.15) 40px,
+      rgba(139, 92, 246, 0.05) 80px
     );
     background-size: 1000px 100%;
     animation: shimmer 2s linear infinite;

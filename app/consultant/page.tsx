@@ -23,11 +23,16 @@ export default async function ConsultantDashboard() {
   return (
     <div className="min-h-screen bg-gradient-editorial bg-noise">
       {/* Header */}
-      <header className="border-b border-neutral-200 bg-background/80 backdrop-blur-sm sticky top-0 z-10">
+      <header className="border-b border-neutral-700 bg-background/80 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="font-display text-heading-xl text-foreground">
+              <Link href="/" className="inline-block mb-2">
+                <span className="font-display text-body-lg text-foreground hover:opacity-70 transition-opacity">
+                  TVA<span className="bg-gradient-to-r from-purple to-orange bg-clip-text text-transparent">social</span>
+                </span>
+              </Link>
+              <h1 className="font-display text-heading-xl bg-gradient-to-r from-purple to-orange bg-clip-text text-transparent">
                 Consultant Dashboard
               </h1>
               <p className="font-body text-body-sm text-foreground-muted mt-1">
@@ -88,13 +93,13 @@ export default async function ConsultantDashboard() {
                   <Link
                     key={client.id}
                     href={`/consultant/${client.id}`}
-                    className="card-editorial p-6 group hover:border-accent/30 transition-all duration-300 stagger-item"
+                    className="card-editorial p-6 group hover:border-purple/50 transition-all duration-300 stagger-item"
                     style={{ animationDelay: `${index * 0.05}s` }}
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1 space-y-3">
                         <div>
-                          <h3 className="font-headline text-heading-md text-foreground group-hover:text-accent transition-colors">
+                          <h3 className="font-headline text-heading-md text-foreground group-hover:text-purple transition-colors">
                             {client.name}
                           </h3>
                           {client.company_name && (
@@ -109,7 +114,7 @@ export default async function ConsultantDashboard() {
                             {client.strategies[0].platforms?.map((platform: string) => (
                               <span
                                 key={platform}
-                                className="px-3 py-1 bg-accent/10 text-accent font-ui text-ui-sm border border-accent/20"
+                                className="px-3 py-1 bg-orange/10 text-orange font-ui text-ui-sm border border-orange/20"
                               >
                                 {platform}
                               </span>
@@ -126,7 +131,7 @@ export default async function ConsultantDashboard() {
                         <p className="font-ui text-ui-sm text-foreground-subtle">
                           {new Date(client.created_at).toLocaleDateString()}
                         </p>
-                        <span className="inline-flex items-center text-accent font-ui text-ui-sm font-medium group-hover:translate-x-1 transition-transform">
+                        <span className="inline-flex items-center text-orange font-ui text-ui-sm font-medium group-hover:translate-x-1 transition-transform">
                           View →
                         </span>
                       </div>
