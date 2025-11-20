@@ -9,52 +9,67 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Editorial Boldness aesthetic - avoiding generic blues/purples
+        // Dark theme with purple and orange highlights - inspired by thevariable.com
         background: {
-          DEFAULT: "#FAFAF9", // Warm off-white
-          dark: "#0A0A0A", // True black
-          subtle: "#F5F5F4", // Stone-50
+          DEFAULT: "#0A0A0A", // True black
+          dark: "#000000", // Pure black
+          subtle: "#1A1A1A", // Dark grey
+          card: "#121212", // Card background
         },
         foreground: {
-          DEFAULT: "#1C1917", // Stone-900
-          muted: "#57534E", // Stone-600
-          subtle: "#78716C", // Stone-500
+          DEFAULT: "#F5F5F5", // Off-white text
+          muted: "#A1A1A1", // Muted grey
+          subtle: "#737373", // Subtle grey
+        },
+        purple: {
+          DEFAULT: "#8B5CF6", // Vibrant purple
+          hover: "#7C3AED",
+          light: "#A78BFA",
+          dark: "#6D28D9",
+          glow: "rgba(139, 92, 246, 0.5)",
+        },
+        orange: {
+          DEFAULT: "#F97316", // Vibrant orange
+          hover: "#EA580C",
+          light: "#FB923C",
+          dark: "#C2410C",
+          glow: "rgba(249, 115, 22, 0.5)",
         },
         accent: {
-          DEFAULT: "#DC2626", // Bold red - our primary accent
-          hover: "#B91C1C",
-          light: "#FEE2E2",
-          dark: "#991B1B",
+          DEFAULT: "#8B5CF6", // Purple as primary accent
+          hover: "#7C3AED",
+          light: "#A78BFA",
+          dark: "#6D28D9",
         },
         success: {
-          DEFAULT: "#059669", // Emerald-600
-          light: "#D1FAE5",
-          dark: "#047857",
+          DEFAULT: "#10B981", // Emerald
+          light: "#34D399",
+          dark: "#059669",
         },
         warning: {
-          DEFAULT: "#D97706", // Amber-600
-          light: "#FEF3C7",
-          dark: "#B45309",
+          DEFAULT: "#F59E0B", // Amber
+          light: "#FBBF24",
+          dark: "#D97706",
         },
         neutral: {
-          50: "#FAFAF9",
-          100: "#F5F5F4",
-          200: "#E7E5E4",
-          300: "#D6D3D1",
-          400: "#A8A29E",
-          500: "#78716C",
-          600: "#57534E",
-          700: "#44403C",
-          800: "#292524",
-          900: "#1C1917",
+          50: "#F5F5F5",
+          100: "#E5E5E5",
+          200: "#D4D4D4",
+          300: "#A1A1A1",
+          400: "#737373",
+          500: "#525252",
+          600: "#404040",
+          700: "#262626",
+          800: "#171717",
+          900: "#0A0A0A",
         },
       },
       fontFamily: {
-        // Distinctive font choices - avoiding Inter, Roboto, etc.
-        display: ["var(--font-fraunces)", "serif"], // Editorial display font
-        headline: ["var(--font-sora)", "sans-serif"], // Modern headline font
-        body: ["var(--font-work-sans)", "sans-serif"], // Readable body font
-        ui: ["var(--font-outfit)", "sans-serif"], // UI elements
+        // Slab font + Playfair combination inspired by thevariable.com
+        display: ["var(--font-playfair)", "serif"], // Elegant display font
+        headline: ["var(--font-roboto-slab)", "serif"], // Slab headline font
+        body: ["var(--font-roboto-slab)", "serif"], // Slab body font
+        ui: ["var(--font-roboto-slab)", "serif"], // Slab UI elements
       },
       fontSize: {
         // Type scale with clear hierarchy
@@ -81,10 +96,12 @@ const config: Config = {
         "4xl": "2rem",
       },
       boxShadow: {
-        "soft": "0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06)",
-        "medium": "0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.06)",
-        "hard": "0 8px 32px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08)",
-        "editorial": "0 0 0 1px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04)",
+        "soft": "0 2px 8px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.6)",
+        "medium": "0 4px 16px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.8)",
+        "hard": "0 8px 32px rgba(0, 0, 0, 0.8), 0 4px 8px rgba(0, 0, 0, 0.9)",
+        "editorial": "0 0 0 1px rgba(255, 255, 255, 0.1), 0 2px 4px rgba(0, 0, 0, 0.6)",
+        "glow": "0 0 20px rgba(139, 92, 246, 0.3), 0 0 40px rgba(139, 92, 246, 0.1)",
+        "orange-glow": "0 0 20px rgba(249, 115, 22, 0.3), 0 0 40px rgba(249, 115, 22, 0.1)",
       },
       animation: {
         "fade-in": "fadeIn 0.3s ease-in-out",
