@@ -27,6 +27,11 @@ export default async function ConsultantDashboard() {
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
             <div>
+              <Link href="/" className="inline-block mb-2">
+                <span className="font-display text-body-lg text-foreground hover:opacity-70 transition-opacity">
+                  TVA<span className="bg-gradient-to-r from-purple to-orange bg-clip-text text-transparent">social</span>
+                </span>
+              </Link>
               <h1 className="font-display text-heading-xl bg-gradient-to-r from-purple to-orange bg-clip-text text-transparent">
                 Consultant Dashboard
               </h1>
