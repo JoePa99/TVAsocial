@@ -159,6 +159,14 @@ All tables use Row Level Security (RLS):
    - Tone adjustment
    - Generate similar content
 
+### Powered by Google Gemini
+
+4. **Image Generation** ✅
+   - Uses Gemini 2.0 Flash for fast, affordable image generation
+   - Generates detailed image prompts from visual concepts
+   - Incorporates brand colors and tone
+   - 1,500 free images/day on free tier
+
 ## 🔐 Authentication & Authorization
 
 ### User Roles

@@ -33,7 +33,41 @@ ANTHROPIC_API_KEY=sk-ant-api03-xxxxx
 
 ### 3. Image Generation (Choose One)
 
-#### Option A: Google Cloud Vertex AI / Imagen (Recommended if you want Google)
+#### Option A: Google Gemini 2.0 Flash (Recommended - Fast & Affordable)
+
+```env
+GEMINI_API_KEY=your_gemini_api_key
+```
+
+**Where to get this:**
+1. Go to https://aistudio.google.com/apikey
+2. Click **Get API key** or **Create API key**
+3. Select your Google Cloud project (or create a new one)
+4. Copy the API key
+
+**Why Gemini 2.0 Flash?**
+- Native multimodal image generation
+- Fast response times (~2-3 seconds)
+- Affordable pricing (~$0.001 per image)
+- Simple API - just one key needed
+- No complex service account setup
+
+**Pricing:** Free tier includes 1,500 requests/day
+
+#### Option B: OpenAI DALL-E
+
+```env
+OPENAI_API_KEY=sk-xxxxx
+```
+
+**Where to get this:**
+1. Go to https://platform.openai.com/api-keys
+2. Create a new secret key
+3. Copy the key
+
+**Pricing:** $0.040-0.080 per image (DALL-E 3)
+
+#### Option C: Google Cloud Vertex AI / Imagen
 
 ```env
 GOOGLE_CLOUD_PROJECT_ID=your-gcp-project-id
@@ -52,27 +86,6 @@ GOOGLE_APPLICATION_CREDENTIALS_JSON={"type":"service_account","project_id":"..."
 6. Copy your project ID to `GOOGLE_CLOUD_PROJECT_ID`
 
 **Note:** For Vercel, you need to paste the entire JSON as a string (minified, no line breaks).
-
-#### Option B: OpenAI DALL-E
-
-```env
-OPENAI_API_KEY=sk-xxxxx
-```
-
-**Where to get this:**
-1. Go to https://platform.openai.com/api-keys
-2. Create a new secret key
-3. Copy the key
-
-#### Option C: Midjourney (via third-party API)
-
-```env
-MIDJOURNEY_API_KEY=your_midjourney_api_key
-```
-
-Midjourney doesn't have an official API yet. You'd need to use a third-party service like:
-- https://thenextleg.io
-- https://midjourneyapi.io
 
 ---
 
@@ -139,7 +152,7 @@ Click **Deploy** and wait for the build to complete.
 
 ## Environment Variables Summary
 
-### Minimum Required (6 variables):
+### Minimum Required (5 variables):
 
 ```env
 # Supabase (3 variables)
@@ -150,16 +163,16 @@ SUPABASE_SERVICE_ROLE_KEY
 # AI (1 variable)
 ANTHROPIC_API_KEY
 
-# Image Generation - Choose One (1-2 variables)
-# Option A: Google
-GOOGLE_CLOUD_PROJECT_ID
-GOOGLE_APPLICATION_CREDENTIALS_JSON
+# Image Generation - Choose One (1 variable)
+# Option A: Google Gemini (Recommended)
+GEMINI_API_KEY
 
 # Option B: OpenAI
 OPENAI_API_KEY
 
-# Option C: Midjourney
-MIDJOURNEY_API_KEY
+# Option C: Google Cloud Vertex AI
+GOOGLE_CLOUD_PROJECT_ID
+GOOGLE_APPLICATION_CREDENTIALS_JSON
 ```
 
 ---
@@ -246,9 +259,10 @@ Before deploying to production:
 - Budget for ~$50-200/month depending on usage
 
 ### Image Generation
-- **Google Vertex AI:** ~$0.020 per image
+- **Google Gemini 2.0 Flash:** ~$0.001 per image (1,500 free/day)
 - **OpenAI DALL-E 3:** $0.040-0.080 per image
-- Budget for ~$20-100/month depending on volume
+- **Google Vertex AI Imagen:** ~$0.020 per image
+- **Budget with Gemini:** ~$10-30/month (mostly free tier)
 
 ---
 
