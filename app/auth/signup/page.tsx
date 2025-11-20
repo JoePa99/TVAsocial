@@ -54,7 +54,7 @@ export default function SignupPage() {
         {/* Logo/Brand */}
         <div className="text-center mb-12">
           <h1 className="font-display text-display-sm text-foreground mb-3">
-            TVA<span className="text-accent">social</span>
+            TVA<span className="bg-gradient-to-r from-purple to-orange bg-clip-text text-transparent">social</span>
           </h1>
           <p className="font-body text-body-md text-foreground-muted">
             Transform strategy into stories
@@ -73,8 +73,8 @@ export default function SignupPage() {
           </div>
 
           {error && (
-            <div className="p-4 bg-accent-light border border-accent/20 animate-slide-down">
-              <p className="font-ui text-ui-md text-accent-dark">{error}</p>
+            <div className="p-4 bg-orange/10 border border-orange/20 animate-slide-down">
+              <p className="font-ui text-ui-md text-orange">{error}</p>
             </div>
           )}
 
@@ -163,7 +163,7 @@ export default function SignupPage() {
             Already have an account?{' '}
             <Link
               href="/auth/login"
-              className="text-accent hover:text-accent-hover font-medium transition-colors"
+              className="text-purple hover:text-purple-light font-medium transition-colors"
             >
               Sign in
             </Link>
