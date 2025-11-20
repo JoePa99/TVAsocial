@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useDropzone } from 'react-dropzone';
 
 export default function NewClientPage() {
@@ -115,6 +116,9 @@ export default function NewClientPage() {
       {/* Header */}
       <header className="border-b border-neutral-700 bg-background/80 backdrop-blur-sm">
         <div className="max-w-4xl mx-auto px-6 py-6">
+          <Link href="/consultant" className="inline-block mb-3 text-foreground-muted hover:text-foreground transition-colors">
+            ← Back to Dashboard
+          </Link>
           <h1 className="font-display text-heading-xl bg-gradient-to-r from-purple to-orange bg-clip-text text-transparent">
             Create New Client
           </h1>
