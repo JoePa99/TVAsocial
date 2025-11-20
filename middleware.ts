@@ -69,18 +69,24 @@ export async function middleware(request: NextRequest) {
 
   // Redirect to appropriate dashboard if authenticated and on public route (including homepage)
   if (user && isPublicRoute) {
-    // Get user role from database
-    const { data: userData } = await supabase
-      .from('users')
-      .select('role')
-      .eq('id', user.id)
-      .single();
+    // Try to get role from user metadata first (set during signup)
+    let role = user.user_metadata?.role;
 
-    if (userData?.role === 'consultant') {
+    // If not in metadata, try to get from database
+    if (!role) {
+      const { data: userData } = await supabase
+        .from('users')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+      role = userData?.role;
+    }
+
+    if (role === 'consultant') {
       return NextResponse.redirect(new URL('/consultant', request.url));
-    } else if (userData?.role === 'agency') {
+    } else if (role === 'agency') {
       return NextResponse.redirect(new URL('/agency', request.url));
-    } else if (userData?.role === 'client') {
+    } else if (role === 'client') {
       return NextResponse.redirect(new URL('/client', request.url));
     }
   }
@@ -89,24 +95,31 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   if (user) {
-    const { data: userData } = await supabase
-      .from('users')
-      .select('role')
-      .eq('id', user.id)
-      .single();
+    // Try to get role from user metadata first (set during signup)
+    let role = user.user_metadata?.role;
+
+    // If not in metadata, try to get from database
+    if (!role) {
+      const { data: userData } = await supabase
+        .from('users')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+      role = userData?.role;
+    }
 
     // Consultant routes
-    if (pathname.startsWith('/consultant') && userData?.role !== 'consultant') {
+    if (pathname.startsWith('/consultant') && role !== 'consultant') {
       return NextResponse.redirect(new URL('/unauthorized', request.url));
     }
 
     // Agency routes
-    if (pathname.startsWith('/agency') && userData?.role !== 'agency') {
+    if (pathname.startsWith('/agency') && role !== 'agency') {
       return NextResponse.redirect(new URL('/unauthorized', request.url));
     }
 
     // Client routes
-    if (pathname.startsWith('/client') && userData?.role !== 'client') {
+    if (pathname.startsWith('/client') && role !== 'client') {
       return NextResponse.redirect(new URL('/unauthorized', request.url));
     }
   }
