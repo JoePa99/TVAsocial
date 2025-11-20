@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-gradient-editorial bg-noise">
@@ -16,12 +18,12 @@ export default function Home() {
             AI-powered content generation for consultants, agencies, and clients.
           </p>
           <div className="flex gap-4 justify-center items-center">
-            <button className="btn-primary">
+            <Link href="/auth/signup" className="btn-primary">
               Get Started
-            </button>
-            <button className="btn-secondary">
-              View Demo
-            </button>
+            </Link>
+            <Link href="/auth/login" className="btn-secondary">
+              Sign In
+            </Link>
           </div>
         </div>
 
