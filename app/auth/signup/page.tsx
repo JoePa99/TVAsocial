@@ -20,23 +20,23 @@ export default function SignupPage() {
     setError('');
 
     try {
-      // Create auth user
+      // Create auth user with role in metadata
+      // The database trigger will automatically create the user profile
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: {
+            role: role,
+          },
+        },
       });
 
       if (authError) throw authError;
       if (!authData.user) throw new Error('Failed to create user');
 
-      // Create user profile
-      const { error: profileError } = await supabase.from('users').insert({
-        id: authData.user.id,
-        email,
-        role,
-      });
-
-      if (profileError) throw profileError;
+      // Wait a brief moment for the trigger to complete
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       // Redirect will be handled by middleware
       router.push('/');

@@ -67,8 +67,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/auth/login', request.url));
   }
 
-  // Redirect to appropriate dashboard if authenticated and on public route
-  if (user && isPublicRoute && request.nextUrl.pathname !== '/') {
+  // Redirect to appropriate dashboard if authenticated and on public route (including homepage)
+  if (user && isPublicRoute) {
     // Get user role from database
     const { data: userData } = await supabase
       .from('users')
