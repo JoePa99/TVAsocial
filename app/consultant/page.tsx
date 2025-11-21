@@ -6,13 +6,14 @@ import { redirect } from 'next/navigation';
 export default async function ConsultantDashboard() {
   const user = await getCurrentUser();
 
-  // If no user or wrong role, redirect (middleware should handle this, but just in case)
+  // If no user, redirect to login
   if (!user) {
     redirect('/auth/login');
   }
 
+  // If wrong role, redirect to homepage (homepage will redirect to correct dashboard)
   if (user.role !== 'consultant') {
-    redirect(`/${user.role}`);
+    redirect('/');
   }
 
   const supabase = await createClient();

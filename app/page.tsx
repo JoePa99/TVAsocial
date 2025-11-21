@@ -3,46 +3,48 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase/client';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
-  const [authStatus, setAuthStatus] = useState<any>(null);
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function checkAuth() {
       const { data: { user } } = await supabase.auth.getUser();
+
       if (user) {
         const { data: dbUser } = await supabase
           .from('users')
-          .select('*')
+          .select('role')
           .eq('id', user.id)
           .single();
 
-        // If user has a role, redirect them immediately (client-side fallback)
+        // If user has a role, redirect them to their dashboard
         if (dbUser?.role) {
-          window.location.href = `/${dbUser.role}`;
+          router.replace(`/${dbUser.role}`);
           return;
         }
-
-        setAuthStatus({ user, dbUser });
       }
+
+      // Not authenticated or no role, show homepage
+      setLoading(false);
     }
     checkAuth();
-  }, []);
+  }, [router]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-editorial bg-noise flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block w-8 h-8 border-4 border-purple/30 border-t-purple rounded-full animate-spin" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-gradient-editorial bg-noise">
-      {/* Debug banner - shows if user is authenticated */}
-      {authStatus && (
-        <div className="bg-orange/20 border-b border-orange p-4 text-center">
-          <p className="font-ui text-ui-md text-orange">
-            🚨 DEBUG: You're signed in as {authStatus.user.email} with role "{authStatus.dbUser?.role || 'UNKNOWN'}".
-            Middleware should have redirected you to /{authStatus.dbUser?.role || 'unknown'}.
-            If you see this, the redirect is NOT working!
-          </p>
-        </div>
-      )}
-
-      <div className="max-w-7xl mx-auto px-6 py-24">
         {/* Hero Section */}
         <div className="text-center space-y-8 mb-24">
           <h1 className="font-display text-display-md md:text-display-lg text-foreground text-balance">
