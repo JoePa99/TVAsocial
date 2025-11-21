@@ -47,8 +47,18 @@ export default function LoginPage() {
         }),
       });
 
-      // Now redirect - server will have the session
-      window.location.href = '/';
+      // Get user role and redirect to their dashboard
+      const { data: userData } = await supabase
+        .from('users')
+        .select('role')
+        .eq('id', data.user.id)
+        .single();
+
+      if (userData?.role) {
+        window.location.href = `/${userData.role}`;
+      } else {
+        throw new Error('Could not determine user role');
+      }
     } catch (err: any) {
       setError(err.message || 'An error occurred during login');
       setLoading(false);

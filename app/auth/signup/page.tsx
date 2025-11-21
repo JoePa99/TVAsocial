@@ -53,12 +53,10 @@ export default function SignupPage() {
         // If it's a duplicate, that's fine - the profile exists
       }
 
-      // Redirect will be handled by middleware
-      router.push('/');
-      router.refresh();
+      // Redirect directly to their dashboard
+      window.location.href = `/${role}`;
     } catch (err: any) {
       setError(err.message || 'An error occurred during signup');
-    } finally {
       setLoading(false);
     }
   };
