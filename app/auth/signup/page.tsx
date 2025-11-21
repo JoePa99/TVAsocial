@@ -38,21 +38,18 @@ export default function SignupPage() {
       // Wait a brief moment for the trigger to complete
       await new Promise(resolve => setTimeout(resolve, 500));
 
-      // Redirect based on role
+      // Use hard redirect to bypass any middleware issues
       if (role === 'consultant') {
-        router.push('/consultant');
+        window.location.href = '/consultant';
       } else if (role === 'agency') {
-        router.push('/agency');
+        window.location.href = '/agency';
       } else if (role === 'client') {
-        router.push('/client');
+        window.location.href = '/client';
       } else {
-        router.push('/');
+        window.location.href = '/';
       }
-
-      router.refresh();
     } catch (err: any) {
       setError(err.message || 'An error occurred during signup');
-    } finally {
       setLoading(false);
     }
   };
