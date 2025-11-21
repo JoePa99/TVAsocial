@@ -39,6 +39,9 @@ export default function LoginPage() {
         role = userData?.role;
       }
 
+      // Small delay to ensure auth cookies are set
+      await new Promise(resolve => setTimeout(resolve, 100));
+
       // Use hard redirect to bypass any middleware issues
       if (role === 'consultant') {
         window.location.href = '/consultant';
