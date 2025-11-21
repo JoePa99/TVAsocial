@@ -39,8 +39,11 @@ export default function LoginPage() {
         role = userData?.role;
       }
 
-      // Small delay to ensure auth cookies are set
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // Refresh the session to sync server-side auth
+      router.refresh();
+
+      // Small delay to ensure everything is synced
+      await new Promise(resolve => setTimeout(resolve, 200));
 
       // Use hard redirect to bypass any middleware issues
       if (role === 'consultant') {
