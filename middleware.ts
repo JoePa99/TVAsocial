@@ -59,8 +59,11 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   // Public routes
-  const publicRoutes = ['/auth/login', '/auth/signup', '/'];
-  const isPublicRoute = publicRoutes.some(route => request.nextUrl.pathname.startsWith(route));
+  const pathname = request.nextUrl.pathname;
+  const isPublicRoute =
+    pathname === '/' ||
+    pathname.startsWith('/auth/login') ||
+    pathname.startsWith('/auth/signup');
 
   // Redirect to login if not authenticated and trying to access protected route
   if (!user && !isPublicRoute) {
@@ -86,8 +89,6 @@ export async function middleware(request: NextRequest) {
   }
 
   // Role-based route protection
-  const pathname = request.nextUrl.pathname;
-
   if (user) {
     const { data: userData } = await supabase
       .from('users')
