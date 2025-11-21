@@ -58,72 +58,18 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Public routes
+  // Public routes that don't require authentication
   const pathname = request.nextUrl.pathname;
   const isPublicRoute =
     pathname === '/' ||
-    pathname.startsWith('/auth/login') ||
-    pathname.startsWith('/auth/signup');
+    pathname.startsWith('/auth/') ||
+    pathname.startsWith('/debug') ||
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/agency-test');
 
-  // Allow debug, admin, and test pages through without redirect
-  if (pathname.startsWith('/debug') || pathname.startsWith('/admin') || pathname.startsWith('/agency-test')) {
-    return response;
-  }
-
-  // Redirect to login if not authenticated and trying to access protected route
+  // Only protect dashboard routes - require authentication
   if (!user && !isPublicRoute) {
     return NextResponse.redirect(new URL('/auth/login', request.url));
-  }
-
-  // Redirect to appropriate dashboard if authenticated and on public route (including homepage)
-  if (user && isPublicRoute) {
-    // Get user role from database
-    const { data: userData, error: roleError } = await supabase
-      .from('users')
-      .select('role')
-      .eq('id', user.id)
-      .single();
-
-    // If there's an error fetching the role or no user data exists, sign them out
-    if (roleError || !userData) {
-      await supabase.auth.signOut();
-      return NextResponse.redirect(new URL('/auth/login?error=account_setup', request.url));
-    }
-
-    // Redirect based on role
-    if (userData.role === 'consultant') {
-      return NextResponse.redirect(new URL('/consultant', request.url));
-    } else if (userData.role === 'agency') {
-      return NextResponse.redirect(new URL('/agency', request.url));
-    } else if (userData.role === 'client') {
-      return NextResponse.redirect(new URL('/client', request.url));
-    } else {
-      // Invalid or missing role - sign them out
-      await supabase.auth.signOut();
-      return NextResponse.redirect(new URL('/auth/login?error=invalid_role', request.url));
-    }
-  }
-
-  // Role-based route protection - redirect to correct dashboard instead of showing error
-  if (user && !isPublicRoute) {
-    const { data: userData } = await supabase
-      .from('users')
-      .select('role')
-      .eq('id', user.id)
-      .single();
-
-    if (userData) {
-      // If accessing wrong dashboard, redirect to correct one
-      if (pathname.startsWith('/consultant') && userData.role !== 'consultant') {
-        return NextResponse.redirect(new URL(`/${userData.role}`, request.url));
-      }
-      if (pathname.startsWith('/agency') && userData.role !== 'agency') {
-        return NextResponse.redirect(new URL(`/${userData.role}`, request.url));
-      }
-      if (pathname.startsWith('/client') && userData.role !== 'client') {
-        return NextResponse.redirect(new URL(`/${userData.role}`, request.url));
-      }
-    }
   }
 
   return response;
