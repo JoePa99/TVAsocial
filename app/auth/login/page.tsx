@@ -24,10 +24,19 @@ export default function LoginPage() {
       });
 
       if (error) throw error;
-      if (!data.user) throw new Error('Login failed');
+      if (!data.user || !data.session) throw new Error('Login failed');
 
-      // Redirect to home - middleware will redirect to correct dashboard
-      // This ensures server-side auth is synced before accessing protected routes
+      // Set session server-side to ensure middleware can see authenticated user
+      await fetch('/api/auth/callback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          access_token: data.session.access_token,
+          refresh_token: data.session.refresh_token,
+        }),
+      });
+
+      // Now redirect - server will have the session
       window.location.href = '/';
     } catch (err: any) {
       setError(err.message || 'An error occurred during login');

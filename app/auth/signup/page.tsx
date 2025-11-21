@@ -33,13 +33,19 @@ export default function SignupPage() {
       });
 
       if (authError) throw authError;
-      if (!authData.user) throw new Error('Failed to create user');
+      if (!authData.user || !authData.session) throw new Error('Failed to create user');
 
-      // Wait a brief moment for the trigger to complete
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Set session server-side to ensure middleware can see authenticated user
+      await fetch('/api/auth/callback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          access_token: authData.session.access_token,
+          refresh_token: authData.session.refresh_token,
+        }),
+      });
 
-      // Redirect to home - middleware will redirect to correct dashboard
-      // This ensures server-side auth is synced before accessing protected routes
+      // Now redirect - server will have the session
       window.location.href = '/';
     } catch (err: any) {
       setError(err.message || 'An error occurred during signup');
