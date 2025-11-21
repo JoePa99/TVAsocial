@@ -16,6 +16,13 @@ export default function Home() {
           .select('*')
           .eq('id', user.id)
           .single();
+
+        // If user has a role, redirect them immediately (client-side fallback)
+        if (dbUser?.role) {
+          window.location.href = `/${dbUser.role}`;
+          return;
+        }
+
         setAuthStatus({ user, dbUser });
       }
     }

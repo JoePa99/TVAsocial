@@ -104,27 +104,25 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Role-based route protection
-  if (user) {
+  // Role-based route protection - redirect to correct dashboard instead of showing error
+  if (user && !isPublicRoute) {
     const { data: userData } = await supabase
       .from('users')
       .select('role')
       .eq('id', user.id)
       .single();
 
-    // Consultant routes
-    if (pathname.startsWith('/consultant') && userData?.role !== 'consultant') {
-      return NextResponse.redirect(new URL('/unauthorized', request.url));
-    }
-
-    // Agency routes
-    if (pathname.startsWith('/agency') && userData?.role !== 'agency') {
-      return NextResponse.redirect(new URL('/unauthorized', request.url));
-    }
-
-    // Client routes
-    if (pathname.startsWith('/client') && userData?.role !== 'client') {
-      return NextResponse.redirect(new URL('/unauthorized', request.url));
+    if (userData) {
+      // If accessing wrong dashboard, redirect to correct one
+      if (pathname.startsWith('/consultant') && userData.role !== 'consultant') {
+        return NextResponse.redirect(new URL(`/${userData.role}`, request.url));
+      }
+      if (pathname.startsWith('/agency') && userData.role !== 'agency') {
+        return NextResponse.redirect(new URL(`/${userData.role}`, request.url));
+      }
+      if (pathname.startsWith('/client') && userData.role !== 'client') {
+        return NextResponse.redirect(new URL(`/${userData.role}`, request.url));
+      }
     }
   }
 
