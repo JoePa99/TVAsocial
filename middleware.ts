@@ -58,14 +58,17 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // DEBUG logging
-  console.log('Middleware - Path:', request.nextUrl.pathname);
-  console.log('Middleware - User:', user?.id);
-  console.log('Middleware - User metadata:', user?.user_metadata);
-
   // Public routes
-  const publicRoutes = ['/auth/login', '/auth/signup', '/'];
-  const isPublicRoute = publicRoutes.some(route => request.nextUrl.pathname.startsWith(route));
+  const pathname = request.nextUrl.pathname;
+  const isPublicRoute =
+    pathname === '/' ||
+    pathname.startsWith('/auth/login') ||
+    pathname.startsWith('/auth/signup');
+
+  // Allow debug and admin pages through without redirect
+  if (pathname.startsWith('/debug') || pathname.startsWith('/admin')) {
+    return response;
+  }
 
   // Redirect to login if not authenticated and trying to access protected route
   if (!user && !isPublicRoute) {
@@ -74,65 +77,53 @@ export async function middleware(request: NextRequest) {
 
   // Redirect to appropriate dashboard if authenticated and on public route (including homepage)
   if (user && isPublicRoute) {
-    // Try to get role from user metadata first (set during signup)
-    let role = user.user_metadata?.role;
+    // Get user role from database
+    const { data: userData, error: roleError } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .single();
 
-    // If not in metadata, try to get from database
-    if (!role) {
-      const { data: userData } = await supabase
-        .from('users')
-        .select('role')
-        .eq('id', user.id)
-        .single();
-      role = userData?.role;
+    // If there's an error fetching the role or no user data exists, sign them out
+    if (roleError || !userData) {
+      await supabase.auth.signOut();
+      return NextResponse.redirect(new URL('/auth/login?error=account_setup', request.url));
     }
 
-    console.log('Middleware - Detected role:', role);
-    console.log('Middleware - Redirecting from', request.nextUrl.pathname, 'to dashboard');
-
-    if (role === 'consultant') {
+    // Redirect based on role
+    if (userData.role === 'consultant') {
       return NextResponse.redirect(new URL('/consultant', request.url));
-    } else if (role === 'agency') {
+    } else if (userData.role === 'agency') {
       return NextResponse.redirect(new URL('/agency', request.url));
-    } else if (role === 'client') {
+    } else if (userData.role === 'client') {
       return NextResponse.redirect(new URL('/client', request.url));
+    } else {
+      // Invalid or missing role - sign them out
+      await supabase.auth.signOut();
+      return NextResponse.redirect(new URL('/auth/login?error=invalid_role', request.url));
     }
   }
 
   // Role-based route protection
-  const pathname = request.nextUrl.pathname;
-
   if (user) {
-    // Try to get role from user metadata first (set during signup)
-    let role = user.user_metadata?.role;
-
-    // If not in metadata, try to get from database
-    if (!role) {
-      const { data: userData } = await supabase
-        .from('users')
-        .select('role')
-        .eq('id', user.id)
-        .single();
-      role = userData?.role;
-    }
-
-    console.log('Middleware - Role check for', pathname, '- role:', role);
+    const { data: userData } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .single();
 
     // Consultant routes
-    if (pathname.startsWith('/consultant') && role !== 'consultant') {
-      console.log('Middleware - Blocking access to consultant route, redirecting to /unauthorized');
+    if (pathname.startsWith('/consultant') && userData?.role !== 'consultant') {
       return NextResponse.redirect(new URL('/unauthorized', request.url));
     }
 
     // Agency routes
-    if (pathname.startsWith('/agency') && role !== 'agency') {
-      console.log('Middleware - Blocking access to agency route, redirecting to /unauthorized');
+    if (pathname.startsWith('/agency') && userData?.role !== 'agency') {
       return NextResponse.redirect(new URL('/unauthorized', request.url));
     }
 
     // Client routes
-    if (pathname.startsWith('/client') && role !== 'client') {
-      console.log('Middleware - Blocking access to client route, redirecting to /unauthorized');
+    if (pathname.startsWith('/client') && userData?.role !== 'client') {
       return NextResponse.redirect(new URL('/unauthorized', request.url));
     }
   }

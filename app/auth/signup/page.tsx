@@ -21,7 +21,6 @@ export default function SignupPage() {
 
     try {
       // Create auth user with role in metadata
-      // The database trigger will automatically create the user profile
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
@@ -33,22 +32,33 @@ export default function SignupPage() {
       });
 
       if (authError) throw authError;
-      if (!authData.user || !authData.session) throw new Error('Failed to create user');
+      if (!authData.user) throw new Error('Failed to create user');
 
-      // Set session server-side to ensure middleware can see authenticated user
-      await fetch('/api/auth/callback', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          access_token: authData.session.access_token,
-          refresh_token: authData.session.refresh_token,
-        }),
-      });
+      // Manually create user profile in public.users table
+      // This ensures the profile exists before the middleware runs
+      const { error: profileError } = await supabase
+        .from('users')
+        .insert({
+          id: authData.user.id,
+          email: authData.user.email,
+          role: role,
+        });
 
-      // Now redirect - server will have the session
-      window.location.href = '/';
+      if (profileError) {
+        // If profile creation fails, we need to handle it
+        // Check if it's a duplicate key error (profile already exists)
+        if (!profileError.message.includes('duplicate key')) {
+          throw new Error(`Failed to create user profile: ${profileError.message}`);
+        }
+        // If it's a duplicate, that's fine - the profile exists
+      }
+
+      // Redirect will be handled by middleware
+      router.push('/');
+      router.refresh();
     } catch (err: any) {
       setError(err.message || 'An error occurred during signup');
+    } finally {
       setLoading(false);
     }
   };
