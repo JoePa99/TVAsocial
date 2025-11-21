@@ -58,6 +58,11 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // DEBUG logging
+  console.log('Middleware - Path:', request.nextUrl.pathname);
+  console.log('Middleware - User:', user?.id);
+  console.log('Middleware - User metadata:', user?.user_metadata);
+
   // Public routes
   const publicRoutes = ['/auth/login', '/auth/signup', '/'];
   const isPublicRoute = publicRoutes.some(route => request.nextUrl.pathname.startsWith(route));
@@ -81,6 +86,9 @@ export async function middleware(request: NextRequest) {
         .single();
       role = userData?.role;
     }
+
+    console.log('Middleware - Detected role:', role);
+    console.log('Middleware - Redirecting from', request.nextUrl.pathname, 'to dashboard');
 
     if (role === 'consultant') {
       return NextResponse.redirect(new URL('/consultant', request.url));
@@ -108,18 +116,23 @@ export async function middleware(request: NextRequest) {
       role = userData?.role;
     }
 
+    console.log('Middleware - Role check for', pathname, '- role:', role);
+
     // Consultant routes
     if (pathname.startsWith('/consultant') && role !== 'consultant') {
+      console.log('Middleware - Blocking access to consultant route, redirecting to /unauthorized');
       return NextResponse.redirect(new URL('/unauthorized', request.url));
     }
 
     // Agency routes
     if (pathname.startsWith('/agency') && role !== 'agency') {
+      console.log('Middleware - Blocking access to agency route, redirecting to /unauthorized');
       return NextResponse.redirect(new URL('/unauthorized', request.url));
     }
 
     // Client routes
     if (pathname.startsWith('/client') && role !== 'client') {
+      console.log('Middleware - Blocking access to client route, redirecting to /unauthorized');
       return NextResponse.redirect(new URL('/unauthorized', request.url));
     }
   }
