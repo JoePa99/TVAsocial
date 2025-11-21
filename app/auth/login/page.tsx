@@ -39,7 +39,19 @@ export default function LoginPage() {
         role = userData?.role;
       }
 
+      // DEBUG: Log the role to see what we're getting
+      console.log('User role:', role);
+      console.log('User metadata:', data.user.user_metadata);
+
+      // Refresh the session to sync server-side auth
+      router.refresh();
+
+      // Small delay to ensure everything is synced
+      await new Promise(resolve => setTimeout(resolve, 300));
+
       // Use hard redirect to bypass any middleware issues
+      console.log('About to redirect to:', role === 'consultant' ? '/consultant' : role === 'agency' ? '/agency' : role === 'client' ? '/client' : '/');
+
       if (role === 'consultant') {
         window.location.href = '/consultant';
       } else if (role === 'agency') {
