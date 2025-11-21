@@ -26,41 +26,9 @@ export default function LoginPage() {
       if (error) throw error;
       if (!data.user) throw new Error('Login failed');
 
-      // Get user role to redirect to correct dashboard
-      let role = data.user.user_metadata?.role;
-
-      // If role not in metadata, try database
-      if (!role) {
-        const { data: userData } = await supabase
-          .from('users')
-          .select('role')
-          .eq('id', data.user.id)
-          .single();
-        role = userData?.role;
-      }
-
-      // DEBUG: Log the role to see what we're getting
-      console.log('User role:', role);
-      console.log('User metadata:', data.user.user_metadata);
-
-      // Refresh the session to sync server-side auth
-      router.refresh();
-
-      // Small delay to ensure everything is synced
-      await new Promise(resolve => setTimeout(resolve, 300));
-
-      // Use hard redirect to bypass any middleware issues
-      console.log('About to redirect to:', role === 'consultant' ? '/consultant' : role === 'agency' ? '/agency' : role === 'client' ? '/client' : '/');
-
-      if (role === 'consultant') {
-        window.location.href = '/consultant';
-      } else if (role === 'agency') {
-        window.location.href = '/agency';
-      } else if (role === 'client') {
-        window.location.href = '/client';
-      } else {
-        window.location.href = '/';
-      }
+      // Redirect to home - middleware will redirect to correct dashboard
+      // This ensures server-side auth is synced before accessing protected routes
+      window.location.href = '/';
     } catch (err: any) {
       setError(err.message || 'An error occurred during login');
       setLoading(false);
