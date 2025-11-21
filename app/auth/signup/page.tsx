@@ -38,8 +38,17 @@ export default function SignupPage() {
       // Wait a brief moment for the trigger to complete
       await new Promise(resolve => setTimeout(resolve, 500));
 
-      // Redirect will be handled by middleware
-      router.push('/');
+      // Redirect based on role
+      if (role === 'consultant') {
+        router.push('/consultant');
+      } else if (role === 'agency') {
+        router.push('/agency');
+      } else if (role === 'client') {
+        router.push('/client');
+      } else {
+        router.push('/');
+      }
+
       router.refresh();
     } catch (err: any) {
       setError(err.message || 'An error occurred during signup');
