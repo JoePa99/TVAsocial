@@ -1,50 +1,9 @@
-'use client';
-
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase/client';
-import { useRouter } from 'next/navigation';
 
 export default function Home() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function checkAuth() {
-      const { data: { user } } = await supabase.auth.getUser();
-
-      if (user) {
-        const { data: dbUser } = await supabase
-          .from('users')
-          .select('role')
-          .eq('id', user.id)
-          .single();
-
-        // If user has a role, redirect them to their dashboard
-        if (dbUser?.role) {
-          router.replace(`/${dbUser.role}`);
-          return;
-        }
-      }
-
-      // Not authenticated or no role, show homepage
-      setLoading(false);
-    }
-    checkAuth();
-  }, [router]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-editorial bg-noise flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block w-8 h-8 border-4 border-purple/30 border-t-purple rounded-full animate-spin" />
-        </div>
-      </div>
-    );
-  }
-
   return (
     <main className="min-h-screen bg-gradient-editorial bg-noise">
+      <div className="max-w-7xl mx-auto px-6 py-24">
         {/* Hero Section */}
         <div className="text-center space-y-8 mb-24">
           <h1 className="font-display text-display-md md:text-display-lg text-foreground text-balance">
@@ -64,6 +23,19 @@ export default function Home() {
             </Link>
             <Link href="/auth/login" className="btn-secondary">
               Sign In
+            </Link>
+          </div>
+
+          {/* Quick dashboard links */}
+          <div className="pt-8 flex gap-4 justify-center items-center text-sm">
+            <Link href="/consultant" className="text-purple hover:underline">
+              Consultant Dashboard →
+            </Link>
+            <Link href="/agency" className="text-orange hover:underline">
+              Agency Dashboard →
+            </Link>
+            <Link href="/client" className="text-purple hover:underline">
+              Client Dashboard →
             </Link>
           </div>
         </div>

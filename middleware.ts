@@ -54,36 +54,14 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  // Public routes that don't require authentication
-  const pathname = request.nextUrl.pathname;
-  const isPublicRoute =
-    pathname === '/' ||
-    pathname.startsWith('/auth/') ||
-    pathname.startsWith('/debug') ||
-    pathname.startsWith('/admin') ||
-    pathname.startsWith('/agency-test');
-
-  // Only protect dashboard routes - require authentication
-  if (!user && !isPublicRoute) {
-    return NextResponse.redirect(new URL('/auth/login', request.url));
-  }
+  // Just refresh the session, don't redirect anywhere
+  await supabase.auth.getUser();
 
   return response;
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     */
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };
