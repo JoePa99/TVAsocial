@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { requireRole } from '@/lib/auth';
+import { getCurrentUser } from '@/lib/auth';
 import Anthropic from '@anthropic-ai/sdk';
 import { STRATEGY_GENERATION_PROMPT } from '@/lib/ai/prompts';
 
@@ -10,7 +10,12 @@ const anthropic = new Anthropic({
 
 export async function POST(request: NextRequest) {
   try {
-    const user = await requireRole('consultant');
+    const user = await getCurrentUser();
+
+    if (!user || user.role !== 'consultant') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const supabase = await createClient();
     const body = await request.json();
 
