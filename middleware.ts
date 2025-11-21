@@ -65,6 +65,11 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith('/auth/login') ||
     pathname.startsWith('/auth/signup');
 
+  // Allow debug and admin pages through without redirect
+  if (pathname.startsWith('/debug') || pathname.startsWith('/admin')) {
+    return response;
+  }
+
   // Redirect to login if not authenticated and trying to access protected route
   if (!user && !isPublicRoute) {
     return NextResponse.redirect(new URL('/auth/login', request.url));
