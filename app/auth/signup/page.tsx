@@ -21,7 +21,6 @@ export default function SignupPage() {
 
     try {
       // Create auth user with role in metadata
-      // The database trigger will automatically create the user profile
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
@@ -35,8 +34,24 @@ export default function SignupPage() {
       if (authError) throw authError;
       if (!authData.user) throw new Error('Failed to create user');
 
-      // Wait a brief moment for the trigger to complete
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Manually create user profile in public.users table
+      // This ensures the profile exists before the middleware runs
+      const { error: profileError } = await supabase
+        .from('users')
+        .insert({
+          id: authData.user.id,
+          email: authData.user.email,
+          role: role,
+        });
+
+      if (profileError) {
+        // If profile creation fails, we need to handle it
+        // Check if it's a duplicate key error (profile already exists)
+        if (!profileError.message.includes('duplicate key')) {
+          throw new Error(`Failed to create user profile: ${profileError.message}`);
+        }
+        // If it's a duplicate, that's fine - the profile exists
+      }
 
       // Redirect will be handled by middleware
       router.push('/');
