@@ -38,16 +38,9 @@ export default function SignupPage() {
       // Wait a brief moment for the trigger to complete
       await new Promise(resolve => setTimeout(resolve, 500));
 
-      // Use hard redirect to bypass any middleware issues
-      if (role === 'consultant') {
-        window.location.href = '/consultant';
-      } else if (role === 'agency') {
-        window.location.href = '/agency';
-      } else if (role === 'client') {
-        window.location.href = '/client';
-      } else {
-        window.location.href = '/';
-      }
+      // Redirect to home - middleware will redirect to correct dashboard
+      // This ensures server-side auth is synced before accessing protected routes
+      window.location.href = '/';
     } catch (err: any) {
       setError(err.message || 'An error occurred during signup');
       setLoading(false);
