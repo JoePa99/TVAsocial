@@ -65,8 +65,8 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith('/auth/login') ||
     pathname.startsWith('/auth/signup');
 
-  // Allow debug and admin pages through without redirect
-  if (pathname.startsWith('/debug') || pathname.startsWith('/admin')) {
+  // Allow debug, admin, and test pages through without redirect
+  if (pathname.startsWith('/debug') || pathname.startsWith('/admin') || pathname.startsWith('/agency-test')) {
     return response;
   }
 
