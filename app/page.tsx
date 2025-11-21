@@ -1,8 +1,40 @@
+'use client';
+
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabase/client';
 
 export default function Home() {
+  const [authStatus, setAuthStatus] = useState<any>(null);
+
+  useEffect(() => {
+    async function checkAuth() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: dbUser } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+        setAuthStatus({ user, dbUser });
+      }
+    }
+    checkAuth();
+  }, []);
+
   return (
     <main className="min-h-screen bg-gradient-editorial bg-noise">
+      {/* Debug banner - shows if user is authenticated */}
+      {authStatus && (
+        <div className="bg-orange/20 border-b border-orange p-4 text-center">
+          <p className="font-ui text-ui-md text-orange">
+            🚨 DEBUG: You're signed in as {authStatus.user.email} with role "{authStatus.dbUser?.role || 'UNKNOWN'}".
+            Middleware should have redirected you to /{authStatus.dbUser?.role || 'unknown'}.
+            If you see this, the redirect is NOT working!
+          </p>
+        </div>
+      )}
+
       <div className="max-w-7xl mx-auto px-6 py-24">
         {/* Hero Section */}
         <div className="text-center space-y-8 mb-24">
