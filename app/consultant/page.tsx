@@ -1,9 +1,20 @@
-import { requireRole } from '@/lib/auth';
+import { getCurrentUser } from '@/lib/auth';
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 export default async function ConsultantDashboard() {
-  const user = await requireRole('consultant');
+  const user = await getCurrentUser();
+
+  // If no user or wrong role, redirect (middleware should handle this, but just in case)
+  if (!user) {
+    redirect('/auth/login');
+  }
+
+  if (user.role !== 'consultant') {
+    redirect(`/${user.role}`);
+  }
+
   const supabase = await createClient();
 
   // Get all clients and their strategies
