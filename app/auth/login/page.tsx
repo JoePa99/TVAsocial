@@ -18,15 +18,38 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) throw error;
+      if (!data.user) throw new Error('Login failed');
 
-      // Redirect will be handled by middleware
-      router.push('/');
+      // Get user role to redirect to correct dashboard
+      let role = data.user.user_metadata?.role;
+
+      // If role not in metadata, try database
+      if (!role) {
+        const { data: userData } = await supabase
+          .from('users')
+          .select('role')
+          .eq('id', data.user.id)
+          .single();
+        role = userData?.role;
+      }
+
+      // Redirect based on role
+      if (role === 'consultant') {
+        router.push('/consultant');
+      } else if (role === 'agency') {
+        router.push('/agency');
+      } else if (role === 'client') {
+        router.push('/client');
+      } else {
+        router.push('/');
+      }
+
       router.refresh();
     } catch (err: any) {
       setError(err.message || 'An error occurred during login');
