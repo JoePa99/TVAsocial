@@ -29,19 +29,28 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) throw error;
+      if (!data.user || !data.session) throw new Error('Login failed');
 
-      // Redirect will be handled by middleware
-      router.push('/');
-      router.refresh();
+      // Set session server-side to ensure middleware can see authenticated user
+      await fetch('/api/auth/callback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          access_token: data.session.access_token,
+          refresh_token: data.session.refresh_token,
+        }),
+      });
+
+      // Now redirect - server will have the session
+      window.location.href = '/';
     } catch (err: any) {
       setError(err.message || 'An error occurred during login');
-    } finally {
       setLoading(false);
     }
   };

@@ -9,11 +9,22 @@ export async function getCurrentUser() {
 
   if (!user) return null;
 
+  // Try to get user data from database
   const { data: userData } = await supabase
     .from('users')
     .select('*')
     .eq('id', user.id)
     .single();
+
+  // If database query fails (e.g., RLS not set up), use metadata as fallback
+  if (!userData && user.user_metadata?.role) {
+    return {
+      id: user.id,
+      email: user.email!,
+      role: user.user_metadata.role as UserRole,
+      created_at: user.created_at,
+    };
+  }
 
   return userData;
 }
