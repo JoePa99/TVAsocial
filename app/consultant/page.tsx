@@ -6,14 +6,18 @@ import { redirect } from 'next/navigation';
 export default async function ConsultantDashboard() {
   const user = await getCurrentUser();
 
-  // If no user, redirect to login
+  // If no user, show message
   if (!user) {
-    redirect('/auth/login');
-  }
-
-  // If wrong role, redirect to homepage (homepage will redirect to correct dashboard)
-  if (user.role !== 'consultant') {
-    redirect('/');
+    return (
+      <div className="min-h-screen bg-gradient-editorial bg-noise flex items-center justify-center p-6">
+        <div className="card-editorial p-8 max-w-md text-center">
+          <h2 className="font-headline text-heading-lg text-foreground mb-4">Please sign in</h2>
+          <Link href="/auth/login" className="btn-primary">
+            Sign In
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   const supabase = await createClient();
