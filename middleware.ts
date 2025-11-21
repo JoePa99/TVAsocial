@@ -73,18 +73,29 @@ export async function middleware(request: NextRequest) {
   // Redirect to appropriate dashboard if authenticated and on public route (including homepage)
   if (user && isPublicRoute) {
     // Get user role from database
-    const { data: userData } = await supabase
+    const { data: userData, error: roleError } = await supabase
       .from('users')
       .select('role')
       .eq('id', user.id)
       .single();
 
-    if (userData?.role === 'consultant') {
+    // If there's an error fetching the role or no user data exists, sign them out
+    if (roleError || !userData) {
+      await supabase.auth.signOut();
+      return NextResponse.redirect(new URL('/auth/login?error=account_setup', request.url));
+    }
+
+    // Redirect based on role
+    if (userData.role === 'consultant') {
       return NextResponse.redirect(new URL('/consultant', request.url));
-    } else if (userData?.role === 'agency') {
+    } else if (userData.role === 'agency') {
       return NextResponse.redirect(new URL('/agency', request.url));
-    } else if (userData?.role === 'client') {
+    } else if (userData.role === 'client') {
       return NextResponse.redirect(new URL('/client', request.url));
+    } else {
+      // Invalid or missing role - sign them out
+      await supabase.auth.signOut();
+      return NextResponse.redirect(new URL('/auth/login?error=invalid_role', request.url));
     }
   }
 
