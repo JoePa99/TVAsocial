@@ -48,11 +48,15 @@ export async function POST(request: NextRequest) {
         name,
         company_name,
         industry,
+        consultant_id: user.id, // Link client to consultant
       })
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Client creation error:', error);
+      throw error;
+    }
 
     return NextResponse.json({ data });
   } catch (error: any) {
